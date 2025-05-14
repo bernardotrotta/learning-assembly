@@ -1,0 +1,40 @@
+Esercizi Elementari di Assembly 8086 (sintassi NASM)
+
+1. Somma di tre numeri
+   - Crea tre variabili A, B e C.
+   - Somma i loro valori e salva il risultato in D.
+
+2. Controllo del segno
+   - Carica un valore in A.
+   - Se il numero è negativo, salva 1 in B, altrimenti salva 0.
+
+3. Parità di un numero
+   - Carica un numero in A.
+   - Verifica se il numero ha parità pari o dispari usando il flag di parità (PF).
+
+4. Scambio di due numeri
+   - Scambia i valori di A e B usando un registro temporaneo.
+
+5. Conteggio dei bit a 1 in un byte
+   - Carica un numero in A.
+   - Conta quanti bit a 1 ci sono e salva il risultato in B.
+
+6. Moltiplicazione per 2 senza MUL
+   - Carica un numero in A.
+   - Moltiplicalo per 2 usando lo shift a sinistra (`shl`).
+
+7. Mascheramento di bit
+   - Carica un numero in A.
+   - Applica una maschera di bit con l'operazione AND e salva il risultato in B.
+
+8. Rotazione di un byte
+   - Carica un valore in A.
+   - Ruota i bit a sinistra di 1 posizione e salva il risultato in B.
+
+9. Conversione da minuscolo a maiuscolo
+   - Carica un carattere minuscolo in A.
+   - Convertilo in maiuscolo e salvalo in B.
+
+10. Divisione per 2 senza DIV
+    - Carica un numero in A.
+    - Dividilo per 2 usando uno shift a destra (`shr`) e salva il risultato in B.

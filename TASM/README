@@ -1,0 +1,389 @@
+                WELCOME TO TURBO PROFILER 1.01
+                ------------------------------
+
+  This README file contains important information about Turbo
+  Profiler Version 1.01. For the latest information about Turbo
+  Profiler 1.01, the accompanying programs, and the manual, read
+  this file in its entirety.
+
+
+TABLE OF CONTENTS
+-----------------
+1.  How to Get Help
+2.  Installation
+3.  Notes and Restrictions
+4.  About Turbo Profiler 1.01
+5.  Files on the Disks
+
+
+1.  HOW TO GET HELP
+-------------------
+
+  If you have any problems, please read this file, HELPME!.DOC
+  and the Turbo Profiler User's Guide first. If you still have
+  questions and need assistance, help is available from the
+  following sources:
+
+  1. Type GO BOR on the CompuServe bulletin board system for
+     instant access to the Borland forums with their libraries of
+     technical information and answers to common questions.
+
+     If you are not a member of CompuServe, see the enclosed
+     special offer, and write for full details on how to receive
+     a free IntroPak containing a $15 credit toward your first
+     month's online charges.
+
+  2. Check with your local software dealer or users' group.
+
+  3. Write to us at the following address:
+
+     Borland International
+     Turbo Profiler Technical Support
+     1800 Green Hills Road
+     P.O. Box 660001
+     Scotts Valley, CA  95066-0001
+
+     Please remember to include your serial number or we will be
+     unable to process your letter.
+
+  4. If you have an urgent problem that cannot wait and you have
+     sent in the license agreement, you may call the Borland
+     Technical Support Department at (408) 438-5300 Monday through
+     Friday between the hours of 6 a.m. and 5 p.m. Pacific Time.
+     Please have the following information ready before calling:
+
+     a. Product name and serial number on your original
+        distribution disk. Please have your serial number ready
+        or we will be unable to process your call.
+
+     b. Product version number. The version number is displayed
+        when running Turbo Profiler and pressing the <Alt - space>
+        keys to bring up the System menu and choosing the
+        About... option.
+
+     c. Computer brand, model, and the brands and model numbers
+        of any additional hardware.
+
+     d. Operating system and version number. (The version number
+        can be determined by typing VER at the DOS prompt.)
+
+     e. Contents of your AUTOEXEC.BAT and CONFIG.SYS files.
+
+
+2.  INSTALLATION
+----------------
+
+  You should read the rest of this README file to get further
+  information about this release before you do the installation.
+
+  The Turbo Profiler/INSTALLATION disk contains a program called
+  INSTALL.EXE that will assist you with the installation of Turbo
+  Profiler 1.01.
+
+  To start the installation, change your current drive to the one
+  that has the install program on it and type INSTALL. You will be
+  given instructions in a box at the bottom of the screen for each
+  prompt. For example, if you are installing from drive A:,
+  you type
+
+    A: <Enter>
+    INSTALL <Enter>
+
+  If you have difficulty reading the text displayed by the INSTALL
+  program, use the /B command-line parameter to force it to use
+  black and white colors:
+
+    a:install /B      - Forces INSTALL into BW80 mode
+
+  Specifying the /B parameter may be necessary if you are using an
+  LCD screen or a system that has a color graphics adapter and a
+  monochrome or composite monitor.
+
+  Notes for installation:
+
+    INSTALL copies all Turbo Profiler files onto your hard disk
+    and puts them into subdirectories. The default subdirectories
+    are
+
+      Turbo Profiler Directory:                    C:\TPROF
+      Examples Subdirectory:                       C:\TPROF
+
+  By default, all files from the distribution disks are placed in
+  the Turbo Profiler Directory. If you would rather separate the
+  example programs into their own subdirectory, edit the default
+  example files path before selecting START INSTALLATION.
+
+  The Turbo Profiler distribution disks contain several files
+  with a .ZIP file extension: TPROF.ZIP, TFEXMPL.ZIP, etc. These
+  files contain one or more other files that have been compressed
+  and placed inside an archive. You can de-archive them yourself
+  by using the UNZIP.EXE utility. For example,
+
+    unzip /o tfexmpl
+
+  unpacks all the files stored in the TFEXMPL.ZIP archive into the
+  current directory.
+
+  INSTALL gives you a choice of copying the .ZIP files intact or
+  de-archiving and copying all the individual files onto your hard
+  disk during the installation process.
+
+
+3.  NOTES AND RESTRICTIONS
+--------------------------
+o You need to set the files directive in your CONFIG.SYS file to
+  at least FILES = 10, preferably FILES = 20. If you have trouble
+  doing the File|DOS Shell command or if TPROF can't find your
+  source modules, make sure the FILES directive is in your
+  CONFIG.SYS.
+
+o A single Ctrl-Break inside a DOS function call waiting for
+  console input will not interrupt DOS and return control to Turbo
+  Profiler. You can either press Ctrl-Break once and then end the
+  console input function by pressing Enter, or press Ctrl-Break
+  twice. You will then interrupt DOS and Turbo Profiler will bring
+  up a Disassembly Viewer showing code inside DOS. You should use
+  only F9 at this point, possibly after setting an area marker
+  inside your program.
+
+o If you are using TF386, make sure that you use the -e option if
+  you have loaded any TSRs or device drivers that are using
+  extended memory allocated using the VDISK method. The value to
+  indicate after the -e is the total amount (in Kbytes) of
+  extended memory at the bottom of the extended memory area that
+  is being used by other applications before loading TF386. If you
+  do not use this option, TF386 may overwrite extended memory that
+  is being used by the other applications. For example, if a
+  disk-caching program that uses extended memory is loaded and you
+  do not use the -e option, the program may write incorrect
+  information to your hard disk.
+
+  NOTE: If your programs use the INT 0x15, function 0x88 method
+  to allocate memory, DO NOT count this memory, as TF386 will
+  automatically leave that memory alone.
+
+o You can set the way display updating is performed using either
+  command line options (-do, -dp, -ds) or TFINST (selecting Display
+  from its main menu shows the Display Options dialog box).  For both
+  methods, user screen updating now defaults to Swap.  You might want
+  to select Flip for faster operation; however, this option can cause
+  display problems in some circumstances (usually involving
+  memory-resident programs' assuming the active display page has
+  not changed).  If you set user screen updating to Flip and the
+  File|Dos shell command causes display problems, changing back
+  to Swap should solve the problem.
+
+o In version 1.01, TFINST contains a new option in the
+  Miscellaneous Options dialog box. Link Speed now has a setting
+  for 19200 baud.  New command line options controlling baud rate
+  in TPROF and TFREMOTE are:
+        -rs1      9600 baud (unchanged from version 1.0)
+        -rs2     19200 baud (new)
+        -rs3     38400 baud (previously -rs2)
+        -rs4    115000 baud (default, previously -rs3)
+
+o In version 1.01, the default setting for the NMI intercept is
+  OFF. If you are using a hardware debugging board, you might need
+  to turn this option on. Use caution, however, as several types
+  of machines have incompatibilities that might cause mysterious
+  crashes, possibly causing loss of data in memory or on disk. If
+  you are using a Tandy 1000, we strongly recommended that you
+  leave the NMI intercept off.
+
+o If you're getting erratic behavior, such as messages like
+  "Unknown control point", try removing any mouse drivers and
+  ram-resident programs you might be running in order to see if
+  there is a software conflict.
+
+o If you are using TF386, and you are receiving a "not enough
+  memory to load symbol table" message, you need to enable EMS
+  emulation for TF386.  To do this, use the -F option. For
+  instance, to set up EMS for TF386 at segment 0D000h, invoke
+  TF386 with "-FD000".
+
+o If you are using an HP-Vectra, and you get an Unexpected Interrupt
+  06 when trying to run TF386, you need to set an option in the
+  CMOS setup.  By default the Vectra series uses a protected mode
+  instruction as part of the HP-HIL.  To work around this, contact
+  Hewlett Packard for instruction on disabling this function.
+
+o If you get a "Cannot run TF386: Processor is already in V8086
+  mode" error message when trying to load TF386, then you are
+  using a program which uses the virtual mode of the 80386 ( such
+  as QEMM ).  At this time, it is not possible to use these
+  programs and TF386 at the same time.  You should remove such
+  memory managers, re-boot your system and then run TF386.
+
+o If you're having problems with the mouse cursor disappearing or
+  behaving erratically, you probably need an updated version of your
+  mouse driver.  Because Turbo Debugger 2.01 demands more from the
+  mouse driver than most previous programs, you might not experience
+  a problem with your current driver until you use Turbo Debugger 2.01.
+
+  At this time, the current major mouse driver revisions are:
+
+        Logitech        4.10
+        Genius          9.03
+        Microsoft       7.04
+
+  Contact the manufacturer of your mouse for information about
+  obtaining a newer version.
+
+
+4.  ABOUT TURBO PROFILER 1.01
+-----------------------------
+o Turbo Profiler has been designed to work with other Borland
+  language products as well as programs compiled by other vendors.
+  Please see the MANUAL.DOC file on the Turbo Debugger distribution
+  disks for more information about the TDMAP and TDCONVRT
+  utilities. These utilities allow you to compile your programs
+  with other languages and then convert them to Turbo Profiler
+  format. Turbo Profiler works with the following versions of
+  Borland languages:
+
+    TASM 1.0         (or later)
+    Turbo C 2.0
+    Turbo C++
+    Turbo Pascal 5.0 (or later)
+
+o The file HELPME!.DOC on the distribution disks has more
+  information about using the mouse capabilities of Turbo
+  Profiler 1.01.
+
+o TFINST has the option to set a user-defined program interrupt
+  key that is not reflected in the user's manual.
+
+
+5.  FILES ON THE DISKS
+----------------------
+
+  TURBO PROFILER/INSTALLATION
+  ---------------------------
+  INSTALL  EXE  -  Turbo Profiler installation program
+  README   COM  -  Program to display README File
+  UNZIP    EXE  -  Utility to unpack archived files
+  TPROF    ZIP  -  Packed file that contains the Turbo Profiler program
+    TPROF    EXE  -  Turbo Profiler program
+    TFINST   EXE  -  Configuration customization program
+    HELPME!  DOC  -  Answers to common questions about Turbo Profiler
+  TFUTIL1  ZIP  -  Archive containing Turbo Profiler utility
+    TFREMOTE EXE  -  Remote profiling kernel
+  README        -  This file
+
+  NOTE: If you have the 5.25" version of Turbo Profiler,
+  additional files are located on the following disks.
+
+  TURBO ASSEMBLER/EXAMPLES
+  ------------------------
+  TFEXMPL2 ZIP  -  Turbo Profiler example files
+    PRIME0   C
+    PRIME0   EXE
+    PRIME1   C
+    PRIME1   EXE
+    PRIME2   C
+    PRIME2   EXE
+    PRIME3   C
+    PRIME3   EXE
+    PRIME4   C
+    PRIME4   EXE
+    PRIME5   C
+    PRIME5   EXE
+    PRIME6   C
+    PRIME6   EXE
+
+  TFHELP   ZIP  -  Turbo Help file for Turbo Profiler 1.01
+    TFHELP   TFH
+
+
+  TURBO DEBUGGER/UTILITIES
+  ------------------------
+  TFUTIL2  ZIP  -  Packed Turbo Profiler utility
+    TF386    EXE  -  Utility For 80386 virtual profiling
+
+
+  TURBO DEBUGGER/TD286
+  --------------------
+  TFEXMPL1  ZIP  -  Archive containing Turbo Profiler examples
+    PLOST    C
+    PLOST    EXE
+    PLOSTPAS PAS
+    PLOSTPAS EXE
+    PTOLL    C
+    PTOLL    EXE
+    PTOLLPAS PAS
+    PTOLLPAS EXE
+    CALLTEST C
+    CALLTEST EXE
+    OVRDEMO  PAS
+    OVRDEMO1 PAS
+    OVRDEMO2 PAS
+    OVRDEMO  EXE
+    OVRDEMO  OVR
+
+  TFEXMPL3 ZIP  -  Archive containing Turbo Profiler examples
+    PRIME0PA PAS
+    PRIME0PA EXE
+    PRIME1PA PAS
+    PRIME1PA EXE
+    PRIME2PA PAS
+    PRIME2PA EXE
+    PRIME3PA PAS
+    PRIME3PA EXE
+    PRIME4PA PAS
+    PRIME4PA EXE
+    PRIME5PA PAS
+    PRIME5PA EXE
+    PRIME6PA PAS
+    PRIME6PA EXE
+
+NOTE: If you have the 3.5" version of Turbo Profiler,
+additional files are located on the following disks.
+
+  TURBO PROFILER/INSTALLATION
+  ---------------------------
+  TFUTIL1  ZIP  -  Archive containing Turbo Profiler utility
+    TFREMOTE EXE  -  Remote profiling kernel
+
+  TFEXMPL1  ZIP  -  Archive containing Turbo Profiler examples
+    PLOST    C
+    PLOST    EXE
+    PLOSTPAS PAS
+    PLOSTPAS EXE
+    PTOLL    C
+    PTOLL    EXE
+    PTOLLPAS PAS
+    PTOLLPAS EXE
+    CALLTEST C
+    CALLTEST EXE
+    OVRDEMO  PAS
+    OVRDEMO1 PAS
+    OVRDEMO2 PAS
+    OVRDEMO  EXE
+    OVRDEMO  OVR
+
+  TURBO ASSEMBLER/INSTALLATION
+  ----------------------------
+  TFEXMPL2 ZIP  -  Turbo Profiler example files
+    PRIME0   C
+    PRIME0   EXE
+    PRIME1   C
+    PRIME1   EXE
+    PRIME2   C
+    PRIME2   EXE
+    PRIME3   C
+    PRIME3   EXE
+    PRIME4   C
+    PRIME4   EXE
+    PRIME5   C
+    PRIME5   EXE
+    PRIME6   C
+    PRIME6   EXE
+
+  TFHELP   ZIP  -  Turbo Help file for Turbo Profiler 1.01
+    TFHELP   TFH
+
+  TURBO DEBUGGER/INSTALLATION
+  ---------------------------
+  TFUTIL2  ZIP  -  Packed Turbo Profiler utility
+    TF386    EXE  -  Utility For 80386 virtual profiling
+

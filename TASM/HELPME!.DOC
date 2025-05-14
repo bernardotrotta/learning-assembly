@@ -1,0 +1,200 @@
+/***********************************************************************/
+              TURBO PROFILER 1.0 COMMON QUESTIONS AND ANSWERS
+              -----------------------------------------------
+
+  Below is a list of most commonly asked questions about Turbo Profiler.
+  Following this list is an explanation of some of the new mouse features
+  in Turbo Profiler 1.0.
+
+  1. How does TPROF handle screen output for graphics- and text-based
+     programs?
+
+     Turbo Profiler has a number of strategies that it can use to
+     control how and when the screen gets refreshed. If you are
+     debugging a program that uses a graphics display mode or if
+     you want to use Borland pop-up utilities such as SideKick
+     and SideKick Plus while inside Turbo Profiler, you should
+     review the following tips.
+
+     The default screen-updating mode is "Flip"; this means that
+     Turbo Profiler uses an alternate video display page on
+     adapters that support multiple display pages. This results
+     in fast screen-swapping between Turbo Profiler and your
+     program, but it also can interfere with the operation of
+     pop-up utilities and graphics programs.
+
+     Pop-up utilities may not appear on the screen, even though
+     they are active and processing your keystrokes. You must
+     select "Swap" mode for display-updating in order for pop-ups
+     to work properly. Use Turbo Profiler's -ds command-line
+     option to do this, or use the TFINST utility to permanently
+     set this mode. "Swap" mode makes screen updating slower, but
+     it makes sure that Turbo Profiler's screen does not
+     interfere with either your program's or any other program's
+     display.
+
+     You may also need to use "Swap" when you use the DOS Shell
+     command or run an editor from within TPROF. Most programs
+     expect to run on video page 0, and do not check to see what
+     the current video page is. TPROF's DOS Shell and any editors
+     that TPROF runs in "Flip" mode do not run from video page 0,
+     and the programs may appear to hang, even though you will be
+     able to type in keystrokes normally. If this happens, use
+     the -ds command-line option when you run TPROF or reinstall TPROF
+     to use "Swap" instead of "Flip."
+
+     If you are debugging a graphics mode application, you must
+     specify the -ds command-line option ("Swap" contents) and
+     you may want to use Turbo Profiler's -vg command-line
+     option (Graphics Save). This causes additional memory to be
+     set aside for saving the entire graphics image your
+     program produces. If you don't use this option, a "red
+     cloud" may appear on your program's screen. These options
+     can also be set permanently by using the TFINST program.
+     The Graphics Save option takes an additional 8K of memory
+     and slows screen-swapping.
+
+     If you are running a graphics program that changes the EGA
+     palette, make sure you use the -vp command line option to
+     save the palette.
+
+  2. Can Turbo Profiler execute other programs while you are
+     still using the profiler?
+
+     The DOS Shell and Edit commands in the Module and File
+     windows can swap the program you are debugging to disk in
+     order to make room to run DOS or your editor. The default
+     amount of memory to swap is 128K. You can use TFINST to set a
+     different amount if that's not enough memory to run your
+     editor or other programs. Setting the swap size to 0K tells
+     Turbo Profiler to swap the entire user program to disk
+     before running the DOS command processor.
+
+     Only your program gets swapped to disk; Turbo Profiler
+     remains in memory.
+
+  3. How can I break out of a program even though interrupts are
+     disabled?
+
+     If you have an 80386-chip-based computer and are using
+     TF386, option -B allows break even when interrupts are
+     disabled. For example, this option enables a break from
+
+       CLI
+       JMP $
+
+  4. Why can't I press Ctrl-Break to get out of a program
+     running on a remote machine?
+
+     The program running in the remote machine has taken control
+     of Interrupt 1B (Ctrl-Break). TFREMOTE does not take back
+     control of Interrupt 1B until you stop execution of the
+     running program on the profiler side by completing the
+     program or pressing Ctrl-F2 (Program Reset).
+
+  5. What is the most likely reason for Turbo Profiler to hang
+     when starting up on a PC-compatible computer?
+
+     If your computer is a Tandy 1000A, IBM PC Convertible, or
+     NEC MultiSpeed, or if TPROF hangs when loading on your system,
+     run TFINST and change the item in the Options|Miscellaneous
+     menu so that NMI Intercept is not set. Some computers use
+     the NMI (Non-Maskable Interrupt) in ways that conflict with TPROF,
+     so you must disable TPROF's use of this interrupt in order to
+     run the program.
+
+     Also, if you are using a 80386-based machine and have the
+     SuperKey utility loaded, be careful not to press a key when
+     TF386 is loading, since SuperKey may capture the keystroke
+     and cause unexpected results.
+
+
+*    Common questions about using mouse support in Turbo Profiler 1.0.
+
+Turbo Profiler 1.0 provides mouse support that allows you to manipulate
+elements within the user interface. The following lists mouse-related
+terms to help you become accustomed to Turbo Profiler's mouse support.
+
+If you have a mouse driver installed by default, Turbo Profiler and TFINST
+will try to use your mouse. If you do not wish to use your mouse during a
+debugging session, you can use the command-line switch '-p-' to turn the
+mouse off. This can also be set in TFINST in the Options|Input & prompting
+dialog box.
+
+Clicking and Dragging
+    Most mice provide two or three buttons that allow for various
+    functions inside an application. In Turbo Profiler you can,
+    among other things, use the left mouse button to select options,
+    move items around on the screen, and set breakpoints. The right
+    mouse button has some of the same functionality as the left mouse
+    button, but you can also open local menus within windows using
+    this button. Double clicking the mouse on options in a list will
+    select that item. For instance, in the File|Open dialog box you
+    can highlight a file by clicking the mouse once on the file name.
+    You can load the file by double clicking on the name. The commands
+    shown at the bottom of the screen, like F1-Help, can also be selected
+    using the mouse. Dragging the mouse consists of depressing the mouse
+    button and moving the mouse cursor to a new location.
+
+Mouse drivers
+    Your mouse driver is the application that you install to make your
+    mouse active inside Turbo Profiler and other programs. Most mouse
+    drivers will work with Turbo Profiler but may have to be updated to
+    a newer version if you are using an older version and having problems.
+    If you have problems with the mouse once you have loaded TPROF or
+    TFINST, you might try using the Display Swap option that can be
+    specified either in TFINST or on the command-line with the -ds switch.
+    Consult your mouse manual to ensure proper use of the mouse and its
+    driver. Early versions of mouse drivers don't support screen
+    display modes larger than 80 columns by 24 lines. As a result, your
+    mouse driver might not work correctly when you use Turbo Profiler's
+    enhanced display modes EGA 80x43, VGA 80x50, or EGA/VGA graphics
+    modes.
+
+Scroll bars
+    Scroll bars, located at the right and bottom of all windows, allow
+    you to specify a new position within a window by clicking the mouse
+    on an indicator on the scroll bar and dragging it to a new location.
+    Arrows located at either end of a scroll bar also allow you to scroll
+    through the window when you click and hold the mouse on the arrow heads.
+
+Icons
+    An icon is a window that has been shrunk down to a smaller
+    representation of the window. These icons can be moved around
+    with the mouse by clicking on the border of the icon and dragging
+    it to a new location.  Arrows located at the top right of each
+    viewer allow you to zoom and unzoom the viewer when you click the
+    mouse on the arrows. When you iconize a window, it is stored at the
+    bottom right side of the screen. If any other windows are currently
+    showing at this position, the icon will be put behind that viewer.
+    The global Window menu allows you to pick from a list of currently
+    open windows. This will also take you to an iconized window.
+
+Resize box
+    The resize box is located at the bottom right of each window. You
+    can click the mouse on the box and drag the mouse to resize the
+    viewer. Using the mouse you can also resize the viewer by clicking
+    the mouse on the right border of any window and dragging it. Windows
+    and inspectors can be moved using the mouse by clicking on the top
+    and left borders and dragging the window to a new location. Double
+    clicking the mouse on the top border is a short cut to zoom/unzoom
+    the current window.
+
+Dialog boxes
+    Dialog boxes allow you to select options, specify files to save or
+    restore, and choose different settings. You can click the mouse to
+    make prompts or panes within the dialog box active. Help for the
+    current dialog box is available by clicking on the Help button
+    in the box.
+
+Close buttons
+    A Close button is located at the top left of all windows and dialog
+    boxes. It lets you close the current window or dialog box when you
+    click the mouse on it. If you have entered any information into a
+    dialog box and you use the Close button to close it, the settings
+    you specified in the dialog box will not be saved. This is the same
+    as clicking the mouse on the Cancel button inside a dialog box.
+    You must select the Ok button in dialog boxes in order to save
+    these settings.
+
+
