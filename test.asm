@@ -7,17 +7,15 @@ SECTION text
 ..start:
     MOV AX, data
     MOV DS, AX
-
-    MOV AL, [A]
-    MOV BL, [B]
+    MOV AL, 0
     MOV CL, 0
-    ; ADD AL, 01h     ; Replaced by INC
+    ; ADD AL, 01h   ; Replaced by INC
     
 sum: 
     INC CL
     ADD AL, [A]
     CALL print
-    CMP CL, BL
+    CMP CL, [B]      ; Replace BL with B?
     JNE sum
     CALL fine
     
@@ -26,9 +24,21 @@ fine:
 	INT	21h
 
 print: 
+    PUSH AX         ; "AL" should be pushed to the stack. This will prevent it from being altered by INT 21h.
+
     ADD AL, '0'     ; To print the ASCII char
-    MOV DL, AL
+
     MOV AH, 02h
+
+    MOV DL, AL
     INT 21h
-    SUB AL, '0'
-    RET
+
+    ; MOV DL, 2Ch     ; Comma
+    ; INT 21h
+
+    MOV DL, 20h     ; SP     
+    INT 21h
+
+    POP AX
+
+    RET 
