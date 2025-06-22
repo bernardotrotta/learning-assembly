@@ -1,7 +1,7 @@
 CPU 8086
 SECTION data
-    A: DB 0
-    B: DB 9
+    A: DB 2
+    B: DB 3
 
 SECTION text
 ..start:
@@ -10,13 +10,15 @@ SECTION text
 
     MOV AL, [A]
     MOV BL, [B]
+    MOV CL, 0
     ; ADD AL, 01h     ; Replaced by INC
     
-increment: 
-    INC AL
+sum: 
+    INC CL
+    ADD AL, [A]
     CALL print
-    CMP AL, BL
-    JNE increment
+    CMP CL, BL
+    JNE sum
     CALL fine
     
 fine:
