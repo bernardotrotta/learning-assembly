@@ -1,50 +1,27 @@
 CPU 8086
 SECTION data
-    A: DB 6, 4, 7, 8, 3, 9, 0, 5, 1, 2 ; 45
-    I: DW 10
+N: DB 255
+
 SECTION text
 ..start:
     MOV AX, data
     MOV DS, AX
-
-    MOV SI, 0
-    MOV AL, [A]
-    CALL sum_byte_array
-    CALL fine
-
-fine:
-    MOV AX,4c00h
-	INT	21h
-
-sum_byte_array:
-    CALL print_number
-    CALL print_space
-    INC SI
-    ADD AL, [A+SI]
-    CMP SI, [I]
-    JNE sum_byte_array
-    RET
-
-print_byte_array:
-    CALL print_number
-    CALL print_space
-    INC SI
-    MOV AL, [A+SI]
-    CMP SI, [I]
-    JNE print_byte_array
-    RET
-
-print_number:
+    MOV AL, [N]
+    MOV CX, 03h
+convert:
+    MOV BL, 0Ah
+    XOR AH, AH
+    DIV BL
     PUSH AX
-    ADD AL, '0'
-    MOV DL, AL
-    MOV AH, 02h 
-    INT 21h
+    LOOP convert
+    MOV CX, 03h
+print_bytes:
     POP AX
-    RET 
-
-print_space:
-    MOV DL, 20h
-    MOV AH, 02h 
+    ADD AH, '0'
+    MOV DL, AH
+    MOV AH, 02h
     INT 21h
-    RET 
+    LOOP print_bytes
+fine:
+    MOV AX, 4C00h
+    INT 21h
