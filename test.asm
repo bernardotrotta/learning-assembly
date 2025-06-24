@@ -6,11 +6,13 @@ SECTION text
 ..start:
     mov ax, data
     mov ds, ax
-    
-    mov ah, 09h
-    mov dx, str
-    int 21h
-
+    mov si, 0
+loop_string:
+    mov ah, [str+si]
+    cmp ah, 24h
+    je fine
+    inc si                  ; Expected value: 11 -> 0Bh
+    jmp loop_string
 fine:
     mov ah, 4ch
     int 21h
