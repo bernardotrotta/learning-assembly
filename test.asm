@@ -1,26 +1,39 @@
 CPU 8086
 SECTION data
-    char: db 'A'
-
+    a: dw 0005h
+    b: dw 0003h
+    c: dw 0001h
 
 SECTION text
 ..start:
     mov ax, data
     mov ds, ax
-    mov ax, char
+
+    mov ax, [a]
     push ax
-    call StampaChar
-    add sp, 2
+    mov ax, [b]
+    push ax
+    mov ax, [c]
+    push ax
+
+    call Sum
+    add sp, 6           ; Must be 6, 2*n (3 in this case)
     mov ax, 4c00h
     int 21h
 
-StampaChar: 
+Sum: 
     push bp
     mov bp, sp
-    mov ah, 02h
-    mov bx, [bp+4]
-    mov dx, [bx]
-    int 21h
+    sub sp, 2
+
+    mov ax, [bp+4]
+    add ax, [bp+6]
+    mov [bp-2], ax
+    mov ax, [bp+8]
+    mov bx, [bp-2]
+    add ax, bx
+
+    add sp, 2
 .fine:
     pop bp
     ret
