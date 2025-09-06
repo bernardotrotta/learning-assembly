@@ -1,0 +1,414 @@
+; ===============================================
+; DIVISIONI IN ASSEMBLY 8086 - GUIDA COMPLETA
+; ===============================================
+
+CPU 8086
+SECTION data
+    ; Dati di test
+    dividendo_8:   DB 25        ; 25 / 5 = 5 resto 0
+    divisore_8:    DB 5
+    
+    dividendo_16:  DW 1000      ; 1000 / 7 = 142 resto 6
+    divisore_16:   DW 7
+    
+    dividendo_32:  DD 100000    ; Per divisioni a 32 bit
+    
+    ; Messaggi
+    msg_quoziente: DB 'Quoziente: ', 0
+    msg_resto:     DB 'Resto: ', 0
+    newline:       DB 13, 10, 0
+
+SECTION text
+..start:
+    MOV AX, data
+    MOV DS, AX
+    
+    ; === ESEMPI DIVISIONI ===
+    CALL esempio_div_8bit
+    CALL esempio_div_16bit
+    CALL esempio_div_32bit
+    CALL esempio_divisione_zero
+    CALL esempio_overflow
+    
+    ; Termina programma
+    MOV AX, 4C00h
+    INT 21h
+
+; ===============================================
+; DIVISIONE 8 BIT: DIV reg8/mem8
+; Dividendo: AX (16 bit)
+; Divisore: reg8 o mem8 (8 bit)  
+; Risultato: AL = quoziente, AH = resto
+; ===============================================
+esempio_div_8bit:
+    PUSH AX
+    PUSH BX
+    
+    ; Prepara divisione 25 / 5
+    MOV AL, [dividendo_8]   ; AL = 25
+    XOR AH, AH              ; AX = 0025h (importante!)
+    MOV BL, [divisore_8]    ; BL = 5
+    
+    DIV BL                  ; AX / BL
+    ; Risultato: AL = 5 (quoziente), AH = 0 (resto)
+    
+    ; Stampa risultati
+    PUSH AX                 ; Salva risultato
+    MOV AL, AL              ; Quoziente in AL (già c'è)
+    CALL stampa_numero
+    POP AX                  ; Recupera risultato
+    
+    MOV AL, AH              ; Resto in AL
+    CALL stampa_numero
+    
+    POP BX
+    POP AX
+    RET
+
+; ===============================================
+; DIVISIONE 16 BIT: DIV reg16/mem16
+; Dividendo: DX:AX (32 bit) 
+; Divisore: reg16 o mem16 (16 bit)
+; Risultato: AX = quoziente, DX = resto
+; ===============================================
+esempio_div_16bit:
+    PUSH AX
+    PUSH BX
+    PUSH DX
+    
+    ; Prepara divisione 1000 / 7
+    MOV AX, [dividendo_16]  ; AX = 1000
+    XOR DX, DX              ; DX:AX = 00001000h (importante!)
+    MOV BX, [divisore_16]   ; BX = 7
+    
+    DIV BX                  ; DX:AX / BX
+    ; Risultato: AX = 142 (quoziente), DX = 6 (resto)
+    
+    ; Stampa risultati
+    CALL stampa_numero_16   ; Stampa AX (quoziente)
+    MOV AX, DX              ; Resto in AX
+    CALL stampa_numero_16   ; Stampa resto
+    
+    POP DX
+    POP BX
+    POP AX
+    RET
+
+; ===============================================
+; DIVISIONE 32 BIT (simulata)
+; Per dividere numeri a 32 bit
+; ===============================================
+esempio_div_32bit:
+    PUSH AX
+    PUSH BX
+    PUSH CX
+    PUSH DX
+    
+    ; Carica dividendo a 32 bit
+    MOV AX, WORD [dividendo_32]     ; Parte bassa
+    MOV DX, WORD [dividendo_32 + 2] ; Parte alta
+    ; DX:AX = 100000
+    
+    MOV BX, 13              ; Divisore = 13
+    DIV BX                  ; DX:AX / BX
+    ; AX = quoziente, DX = resto
+    
+    CALL stampa_numero_16
+    
+    POP DX
+    POP CX
+    POP BX
+    POP AX
+    RET
+
+; ===============================================
+; DIVISIONE CON SEGNO: IDIV
+; Stesse regole di DIV ma con numeri con segno
+; ===============================================
+esempio_divisione_segno:
+    PUSH AX
+    PUSH BX
+    
+    ; Divisione -100 / 7
+    MOV AX, -100            ; Numero negativo
+    CWD                     ; Estende segno AX -> DX:AX
+    MOV BX, 7
+    
+    IDIV BX                 ; Divisione con segno
+    ; AX = -14, DX = -2 (quoziente e resto negativi)
+    
+    POP BX
+    POP AX
+    RET
+
+; ===============================================
+; GESTIONE ERRORI: DIVISIONE PER ZERO
+; ===============================================
+esempio_divisione_zero:
+    PUSH AX
+    PUSH BX
+    
+    ; Test divisione per zero
+    MOV AX, 100
+    XOR DX, DX
+    MOV BX, 0               ; Divisore = 0
+    
+    ; Controlla prima di dividere!
+    CMP BX, 0
+    JE .errore_div_zero
+    
+    DIV BX                  ; Questa non viene eseguita
+    JMP .fine_div_zero
+    
+.errore_div_zero:
+    ; Gestione errore - imposta valori di default
+    MOV AX, 0FFFFh          ; Quoziente = -1 (errore)
+    MOV DX, 0FFFFh          ; Resto = -1 (errore)
+    
+.fine_div_zero:
+    POP BX
+    POP AX
+    RET
+
+; ===============================================
+; GESTIONE OVERFLOW
+; ===============================================
+esempio_overflow:
+    PUSH AX
+    PUSH BX
+    PUSH DX
+    
+    ; Divisione che causa overflow
+    MOV AX, 0FFFFh          ; 65535
+    MOV DX, 1               ; DX:AX = 131071
+    MOV BX, 2
+    
+    ; Verifica se il risultato fitterà in 16 bit
+    ; Quoziente teorico = 65535, ma max = 65535
+    ; Se quoziente > 65535, c'è overflow
+    
+    ; Controllo approssimativo:
+    CMP DX, BX              ; Se DX >= BX, possibile overflow
+    JAE .possibile_overflow
+    
+    DIV BX                  ; Divisione sicura
+    JMP .fine_overflow
+    
+.possibile_overflow:
+    ; Gestione overflow - usa divisione alternativa
+    ; o imposta valori di errore
+    MOV AX, 0FFFFh          ; Valore massimo
+    MOV DX, 0               ; Resto = 0
+    
+.fine_overflow:
+    POP DX
+    POP BX
+    POP AX
+    RET
+
+; ===============================================
+; ALGORITMI UTILI PER DIVISIONI
+; ===============================================
+
+; Divisione per 10 (per conversione decimale)
+dividi_per_10:
+    ; Input: AX = numero da dividere
+    ; Output: AX = quoziente, DL = resto (cifra)
+    PUSH BX
+    
+    XOR DX, DX              ; Azzera DX
+    MOV BX, 10
+    DIV BX                  ; AX = AX/10, DX = resto
+    ; DL contiene la cifra meno significativa
+    
+    POP BX
+    RET
+
+; Divisione per potenze di 2 (più veloce con shift)
+dividi_per_potenza_2:
+    ; Esempio: divisione per 8 (2^3)
+    PUSH CX
+    
+    MOV CX, 3               ; 8 = 2^3
+    SHR AX, CL              ; Shift right di 3 posizioni
+    ; AX = AX / 8 (solo per numeri positivi)
+    
+    POP CX
+    RET
+
+; Divisione con resto per numeri grandi
+divisione_multiprecisione:
+    ; Per numeri > 32 bit, usa algoritmo di divisione lunga
+    ; Implementazione semplificata per demo
+    PUSH BX
+    PUSH CX
+    PUSH DX
+    
+    ; Algoritmo di divisione binaria
+    ; (implementazione completa richiederebbe più codice)
+    
+    POP DX
+    POP CX
+    POP BX
+    RET
+
+; ===============================================
+; FUNZIONI UTILITY
+; ===============================================
+
+; Stampa numero a 8 bit (0-9 solamente)
+stampa_numero:
+    PUSH AX
+    PUSH DX
+    
+    ADD AL, '0'
+    MOV DL, AL
+    MOV AH, 02h
+    INT 21h
+    
+    ; Stampa spazio
+    MOV DL, ' '
+    MOV AH, 02h
+    INT 21h
+    
+    POP DX
+    POP AX
+    RET
+
+; Stampa numero a 16 bit (semplificato)
+stampa_numero_16:
+    PUSH AX
+    PUSH BX
+    PUSH CX
+    PUSH DX
+    
+    ; Conversione semplificata (solo per numeri piccoli)
+    MOV BX, 10
+    XOR CX, CX              ; Contatore cifre
+    
+.loop_cifre:
+    XOR DX, DX
+    DIV BX                  ; AX = AX/10, DX = cifra
+    PUSH DX                 ; Salva cifra sullo stack
+    INC CX                  ; Incrementa contatore
+    CMP AX, 0
+    JNE .loop_cifre         ; Continua se AX != 0
+    
+.loop_stampa:
+    POP DX                  ; Recupera cifra
+    ADD DL, '0'             ; Converti in ASCII
+    MOV AH, 02h
+    INT 21h                 ; Stampa cifra
+    LOOP .loop_stampa       ; Ripeti per tutte le cifre
+    
+    ; Stampa spazio
+    MOV DL, ' '
+    MOV AH, 02h
+    INT 21h
+    
+    POP DX
+    POP CX
+    POP BX
+    POP AX
+    RET
+
+; ===============================================
+; ESEMPI PRATICI DI USO
+; ===============================================
+
+; Calcola media di array
+calcola_media:
+    ; Input: SI = puntatore array, CX = numero elementi
+    ; Output: AX = media
+    PUSH BX
+    PUSH DX
+    PUSH SI
+    
+    XOR AX, AX              ; Somma = 0
+    XOR BX, BX              ; Indice = 0
+    
+.loop_somma:
+    ADD AL, [SI + BX]       ; Somma elementi
+    INC BX
+    LOOP .loop_somma
+    
+    ; Dividi per numero elementi
+    XOR DX, DX
+    MOV BX, [numero_elementi] ; Assumendo che sia salvato
+    DIV BX                  ; AX = somma / numero_elementi
+    
+    POP SI
+    POP DX
+    POP BX
+    RET
+
+; Converti numero in stringa decimale
+numero_to_string:
+    ; Input: AX = numero, DI = buffer destinazione
+    ; Output: stringa in buffer
+    PUSH AX
+    PUSH BX
+    PUSH CX
+    PUSH DX
+    PUSH DI
+    
+    MOV BX, 10
+    XOR CX, CX              ; Contatore cifre
+    
+    ; Se numero è 0, caso speciale
+    CMP AX, 0
+    JNE .converti
+    MOV BYTE [DI], '0'
+    MOV BYTE [DI + 1], 0
+    JMP .fine_conversione
+    
+.converti:
+    ; Estrai cifre (dal meno al più significativo)
+.loop_estrai:
+    XOR DX, DX
+    DIV BX                  ; AX = AX/10, DX = cifra
+    ADD DL, '0'             ; Converti in ASCII
+    PUSH DX                 ; Salva cifra
+    INC CX                  ; Incrementa contatore
+    CMP AX, 0
+    JNE .loop_estrai
+    
+    ; Scrivi cifre nel buffer (ordine corretto)
+.loop_scrivi:
+    POP DX                  ; Recupera cifra
+    MOV [DI], DL            ; Scrivi nel buffer
+    INC DI
+    LOOP .loop_scrivi
+    
+    MOV BYTE [DI], 0        ; Termina stringa
+    
+.fine_conversione:
+    POP DI
+    POP DX
+    POP CX
+    POP BX
+    POP AX
+    RET
+
+; ===============================================
+; REGOLE IMPORTANTI E NOTE
+; ===============================================
+
+; REGOLA 1: Preparazione registri
+; DIV reg8:  AX contiene dividendo (16 bit)
+; DIV reg16: DX:AX contiene dividendo (32 bit)
+; SEMPRE azzerare la parte alta: XOR AH,AH o XOR DX,DX
+
+; REGOLA 2: Risultati
+; DIV reg8:  AL = quoziente, AH = resto
+; DIV reg16: AX = quoziente, DX = resto
+
+; REGOLA 3: Controllo errori
+; - Divisione per zero causa interrupt
+; - Overflow se quoziente non fitter nel registro destinazione
+; - Sempre controllare divisore != 0
+
+; REGOLA 4: Divisioni con segno
+; - Usa IDIV invece di DIV
+; - Usa CWD per estendere il segno di AX in DX:AX
+; - Segno del resto = segno del dividendo
