@@ -1,18 +1,20 @@
-; SCASB – Scan String Byte
-; Confronta AL con [ES:DI], aggiorna DI. Utile per cercare un carattere
+; CMPSB – Compare String Byte
+; Confronta [DS:SI] e [ES:DI], aggiorna entrambi i puntatori.
 
 section data
-    buffer: db 'ciao mondo$', 0
+    str1 db 'abc$', 0
+    str2 db 'abc$', 0
+
 section text
 ..start:
     mov ax, data
+    mov ds, ax
     mov es, ax
-    mov di, buffer
-    mov al, 'o'
-    mov cx, 20
+
+    mov si, str1
+    mov di, str2
+    mov cx, 3
 
     cld
-    repne scasb
-fine:
-    mov ah, 04ch
-    int 21h
+    repe cmpsb   ; confronta i due array
+    ; se CX=0 → stringhe uguali
