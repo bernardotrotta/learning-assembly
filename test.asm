@@ -1,18 +1,19 @@
-; STOSB – Store String Byte
-; Scrive in memoria il contenuto di AL all’indirizzo [ES:DI] e poi incrementa/decrementa DI.
+; LODSB – Load String Byte
+; Carica il byte in [DS:SI] dentro AL e aggiorna SI.
 
 section data
-buffer: resb 20
+    str: db 'Bernardo$', 0
 section text
 ..start:
     mov ax, data
     mov ds, ax
-    mov di, buffer
-    mov al, 'A'
-    mov cx, 10
-    cld
-    rep stosb   ; Riempie buffer con 10 caratteri A
-
+    mov si, str
+    cld ; serve ad impostare la direzione dell'incremento degli indici DI e SI
+next_char:
+    lodsb
+    cmp al, 24h
+    je fine
+    jmp next_char
 fine:
     mov ah, 04ch
     int 21h
